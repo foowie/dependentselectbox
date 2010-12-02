@@ -26,6 +26,10 @@ jQuery.extend({
 		initialize: function() {
 			$.dependentselectbox.hideSubmits();
 			$('.'+$.dependentselectbox.controlClass).live('change', function() {
+				// Nette form validation
+				button = document.querySelector('#'+($(this).attr('id'))+$.dependentselectbox.buttonSuffix);
+				button.form["nette-submittedBy"] = button;
+				// ----
 				$('#'+($(this).attr('id'))+$.dependentselectbox.buttonSuffix).ajaxSubmit($.dependentselectbox.jsonResponse);
 			});
 		},
