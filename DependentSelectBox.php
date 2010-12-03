@@ -56,7 +56,7 @@ class DependentSelectBox extends SelectBox {
 	 * Constructor
 	 * @param string $label Label of control
 	 * @param SelectBox|DependentSelectBox|FormControlDependencyHelper $depends SelectBox on which is this control attached
-	 * @param callback $dataCallback Callback for data retreiving
+	 * @param callback $dataCallback Callback for data retreiving function($form, $formControlName)
 	 */
 	public function __construct($label, $parents, $dataCallback) {
 		parent::__construct($label, null, null);
@@ -301,7 +301,7 @@ class DependentSelectBox extends SelectBox {
 	 * @param Form $form Form with values
 	 */
 	protected function setItemsFromCallback($form) {
-		$data = call_user_func($this->dataCallback, $form);
+		$data = call_user_func($this->dataCallback, $form, $this->name);
 		if(!is_array($data))
 			throw new InvalidArgumentException("Data must be array !");
 		$this->setItems($data);
