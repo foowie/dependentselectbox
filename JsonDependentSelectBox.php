@@ -44,7 +44,7 @@ class JsonDependentSelectBox extends DependentSelectBox {
 			);
 		}
 		$response = new JsonResponse($payload);
-		Environment::getApplication()->getPresenter()->terminate($response);
+		Environment::getApplication()->getPresenter()->sendResponse($response);
 	}
 
 	public static function formAddJsonDependentSelectBox($_this, $name, $label, $parents, $dataCallback) {
