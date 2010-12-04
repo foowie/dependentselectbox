@@ -11,7 +11,8 @@ use Nette\Forms\FormContainer;
 use Nette\Forms\FormControl;
 use Nette\Forms\SubmitButton;
 use Nette\Object;
-use InvalidArgumentException;
+use \InvalidArgumentException;
+use \InvalidStateException;
 
 class FormControlDependencyHelper extends Object {
 
@@ -151,7 +152,7 @@ class FormControlDependencyHelper extends Object {
 		// create button
 		if($this->buttonText === null)
 			throw new InvalidArgumentException("Null caption of button is crappy *** !!! (ajax not working properly)");
-		$form = $this->control->getForm(true);
+		$container = $this->control->lookup("Nette\Forms\FormContainer");
 
 		$this->button = new SubmitButton($this->buttonText);
 		$this->button->setValidationScope(false);
@@ -160,16 +161,16 @@ class FormControlDependencyHelper extends Object {
 		$buttonName = $this->formatButtonName($this->control->getName());
 		switch($this->buttonPosition) {
 			case(self::POSITION_DEFAULT):
-				$form->addComponent($this->button, $buttonName);
+				$container->addComponent($this->button, $buttonName);
 				break;
 			case(self::POSITION_BEFORE_CONTROL):
-				$form->addComponent($this->button, $buttonName, $this->control->getName());
+				$container->addComponent($this->button, $buttonName, $this->control->getName());
 				break;
 			case(self::POSITION_AFTER_CONTROL): { // Uhm :(
 				$findName = $this->control->getName();
 				$nextName = null;
 				$found = false;
-				$components = $form->getComponents(true);
+				$components = $container->getComponents(true);
 				foreach($components as $name => $component) {
 					if($found === true) {
 						$nextName = $name;
@@ -179,9 +180,9 @@ class FormControlDependencyHelper extends Object {
 						$found = true;
 				}
 				if($nextName === null)
-					$form->addComponent($this->button, $buttonName);
+					$container->addComponent($this->button, $buttonName);
 				else
-					$form->addComponent($this->button, $buttonName, $nextName);
+					$container->addComponent($this->button, $buttonName, $nextName);
 			} break;
 			default:
 				throw new InvalidArgumentException("Ivalid position value !");
