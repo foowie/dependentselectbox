@@ -56,7 +56,7 @@ class FormControlDependencyHelper extends Object {
 		$this->control = $control;
 		$this->controlClass = $controlClass;
 		$this->buttonPosition = self::$defaultButtonPosition;
-		if(!($control->getForm() instanceof FormContainer))
+		if($this->control->lookup("Nette\Forms\FormContainer", false) === null)
 			throw new InvalidArgumentException("Components should be assigned to FormContainer !");
 	}
 
@@ -69,7 +69,7 @@ class FormControlDependencyHelper extends Object {
 	 * @return boolean
 	 */
 	public function isAnyButtonAttached() {
-		$form = $this->control->getForm(true);
+		$form = $this->control->lookup("Nette\Forms\FormContainer");
 		$buttonName = $this->formatButtonName($this->control->getName());
 		$button = $form->getComponent($buttonName, false);
 		return $button !== null;
@@ -81,7 +81,7 @@ class FormControlDependencyHelper extends Object {
 	 * @return SubmitButton
 	 */
 	public function getAnyAttachedButton($need = false) {
-		$form = $this->control->getForm(true);
+		$form = $this->control->lookup("Nette\Forms\FormContainer");
 		$buttonName = $this->formatButtonName($this->control->getName());
 		$button = $form->getComponent($buttonName, $need);
 		return $button;
