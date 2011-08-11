@@ -8,11 +8,11 @@
 namespace DependentSelectBox;
 
 use Nette\Forms\Container;
-use Nette\Forms\Controls\BaseControl as FormControl;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Object;
 use \InvalidArgumentException;
-use \InvalidStateException;
+use Nette\InvalidStateException;
 
 class FormControlDependencyHelper extends Object {
 
@@ -32,7 +32,7 @@ class FormControlDependencyHelper extends Object {
 	/** @var POSITION_UNDEFINED|POSITION_DEFAULT|POSITION_BEFORE_CONTROL|POSITION_AFTER_CONTROL Default position for buttons  */
 	public static $defaultButtonPosition = self::POSITION_AFTER_CONTROL;
 
-	/** @var \Nette\Forms\FormControl */
+	/** @var BaseControl */
 	public $control;
 	/** @var String Html class of control*/
 	protected $controlClass;
@@ -49,10 +49,10 @@ class FormControlDependencyHelper extends Object {
 
 	/**
 	 *
-	 * @param FormControl $control Component to attach button
+	 * @param BaseControl $control Component to attach button
 	 * @param string $controlClass Html class for that component
 	 */
-	function __construct(FormControl $control, $controlClass = "dependentControl") {
+	function __construct(BaseControl $control, $controlClass = "dependentControl") {
 		$this->control = $control;
 		$this->controlClass = $controlClass;
 		$this->buttonPosition = self::$defaultButtonPosition;

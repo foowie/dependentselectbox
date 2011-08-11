@@ -8,7 +8,7 @@
 namespace DependentSelectBox;
 
 use Nette\Application\Responses\JsonResponse;
-
+use Nette\Forms\Container as FormContainer;
 
 // \Nette\Forms\FormContainer::extensionMethod("addJsonDependentSelectBox", "DependentSelectBox\JsonDependentSelectBox::formAddJsonDependentSelectBox");
 
@@ -19,7 +19,7 @@ class JsonDependentSelectBox extends DependentSelectBox
 
 	public function submitButtonHandler($button) {
 		parent::submitButtonHandler($button);
-		if ($this->presenter->isAjax())
+		if ($this->getPresenter()->isAjax())
 			$this->addJsonResponseItem($this);
 	}
 
@@ -45,11 +45,26 @@ class JsonDependentSelectBox extends DependentSelectBox
 			);
 		}
 		$response = new JsonResponse($payload);
-		$this->presenter->sendResponse($response);
+		$this->getPresenter()->sendResponse($response);
 	}
 
+
+	/**
+	 * @deprecated Alias for Container_prototype_addDependentSelectBox
+	 */
 	public static function formAddJsonDependentSelectBox($_this, $name, $label, $parents, $dataCallback) {
-		return $_this[$name] = new JsonDependentSelectBox($label, $parents, $dataCallback);
+		return self::Container_prototype_addJsonDependentSelectBox($_this, $name, $label, $parents, $dataCallback);
 	}
 
+	public static function Container_prototype_addJsonDependentSelectBox(FormContainer $obj, $name, $label, $parents, $dataCallback) {
+		return $obj[$name] = new JsonDependentSelectBox($label, $parents, $dataCallback);
+	}
+
+	public static function register($methodName = "addJsonDependentSelectBox") {
+		if(PHP_VERSION_ID >= 50300)
+			FormContainer::extensionMethod($methodName, "DependentSelectBox\JsonDependentSelectBox::Container_prototype_addJsonDependentSelectBox");
+		else
+			FormContainer::extensionMethod("FormContainer::$methodName", array("JsonDependentSelectBox", "Container_prototype_addJsonDependentSelectBox"));
+	}
+	
 }
