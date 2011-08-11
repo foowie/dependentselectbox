@@ -7,10 +7,11 @@
 
 namespace DependentSelectBox;
 
-use Nette\Forms\SelectBox;
+use Nette\Forms\Controls\SelectBox;
 use InvalidArgumentException;
 use LogicException;
-use NotSupportedException;
+use Nette\NotSupportedException;
+use Nette\Forms\Container as FormContainer;
 
 // \Nette\Forms\FormContainer::extensionMethod("addDependentSelectBox", "DependentSelectBox\DependentSelectBox::formAddDependentSelectBox");
 
@@ -72,7 +73,7 @@ class DependentSelectBox extends SelectBox {
 
 			if($parent instanceof DependentSelectBox)
 				$parent->childs[] = $this;
-			if(!self::$disableChilds && $this->isRoot($parent) && $parent instanceof SelectBox && $parent->isFirstSkipped())
+			if(!self::$disableChilds && $this->isRoot($parent) && $parent instanceof SelectBox && $parent->getPrompt() === false)
 				throw new NotSupportedException('When first item on root is skipped, $disableChilds = false cant be used !');
 		}
 	}
@@ -225,7 +226,7 @@ class DependentSelectBox extends SelectBox {
 	 * @param boolean $recursive Refresh all items in tree or only this item ?
 	 */
 	public function refresh($clearValue = false, $recursive = true) {
-		$this->skipFirst(false);
+		$this->setPrompt(false);
 		if($clearValue)
 			$this->setValue(null, false);
 		$this->initializeState($this->getForm());
@@ -342,7 +343,7 @@ class DependentSelectBox extends SelectBox {
 		if($this->disabledValue === null) {
 			$this->setValue(null, false);
 			$this->setItems(array());
-			$this->skipFirst(self::$disabledItemTitle);
+			$this->setPrompt(self::$disabledItemTitle);
 		} else {
 			$keys = array_keys($this->disabledValue);
 			$key = reset($keys);
@@ -372,7 +373,7 @@ class DependentSelectBox extends SelectBox {
 	 * Add empty header item and select him
 	 */
 	protected function addEmptyHeaderItem($selectFirst = true) {
-		$this->skipFirst(self::$emptyValueTitle);
+		$this->setPrompt(self::$emptyValueTitle);
 		if($selectFirst)
 			$this->setFirstItemSelected();
 	}
@@ -386,17 +387,23 @@ class DependentSelectBox extends SelectBox {
 		$this->setValue($key, false);
 	}
 
+
 	/**
-	 * Helper which add DependentSelectBox to FormContainer
-	 * @param FormContainer $_this
-	 * @param <type> $name
-	 * @param <type> $label
-	 * @param <type> $depends
-	 * @param <type> $dataCallback
-	 * @return <type>
+	 * @deprecated Alias for Container_prototype_addDependentSelectBox
 	 */
 	public static function formAddDependentSelectBox($_this, $name, $label, $parents, $dataCallback) {
-		return $_this[$name] = new DependentSelectBox($label, $parents, $dataCallback);
+		return self::Container_prototype_addDependentSelectBox($_this, $name, $label, $parents, $dataCallback);
+	}
+
+	public static function Container_prototype_addDependentSelectBox(FormContainer $obj, $name, $label, $parents, $dataCallback) {
+		return $obj[$name] = new DependentSelectBox($label, $parents, $dataCallback);
+	}
+
+	public static function register($methodName = "addDependentSelectBox") {
+		if(PHP_VERSION_ID >= 50300)
+			FormContainer::extensionMethod($methodName, "DependentSelectBox\DependentSelectBox::Container_prototype_addDependentSelectBox");
+		else
+			FormContainer::extensionMethod("FormContainer::$methodName", array("DependentSelectBox", "Container_prototype_addDependentSelectBox"));
 	}
 
 // </editor-fold>

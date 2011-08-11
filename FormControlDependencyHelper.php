@@ -7,12 +7,12 @@
 
 namespace DependentSelectBox;
 
-use Nette\Forms\FormContainer;
-use Nette\Forms\FormControl;
-use Nette\Forms\SubmitButton;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Object;
 use \InvalidArgumentException;
-use \InvalidStateException;
+use Nette\InvalidStateException;
 
 class FormControlDependencyHelper extends Object {
 
@@ -32,7 +32,7 @@ class FormControlDependencyHelper extends Object {
 	/** @var POSITION_UNDEFINED|POSITION_DEFAULT|POSITION_BEFORE_CONTROL|POSITION_AFTER_CONTROL Default position for buttons  */
 	public static $defaultButtonPosition = self::POSITION_AFTER_CONTROL;
 
-	/** @var \Nette\Forms\FormControl */
+	/** @var BaseControl */
 	public $control;
 	/** @var String Html class of control*/
 	protected $controlClass;
@@ -49,14 +49,14 @@ class FormControlDependencyHelper extends Object {
 
 	/**
 	 *
-	 * @param FormControl $control Component to attach button
+	 * @param BaseControl $control Component to attach button
 	 * @param string $controlClass Html class for that component
 	 */
-	function __construct(FormControl $control, $controlClass = "dependentControl") {
+	function __construct(BaseControl $control, $controlClass = "dependentControl") {
 		$this->control = $control;
 		$this->controlClass = $controlClass;
 		$this->buttonPosition = self::$defaultButtonPosition;
-		if($this->control->lookup("Nette\Forms\FormContainer", false) === null)
+		if($this->control->lookup("Nette\Forms\Container", false) === null)
 			throw new InvalidArgumentException("Components should be assigned to FormContainer !");
 	}
 
@@ -69,7 +69,7 @@ class FormControlDependencyHelper extends Object {
 	 * @return boolean
 	 */
 	public function isAnyButtonAttached() {
-		$form = $this->control->lookup("Nette\Forms\FormContainer");
+		$form = $this->control->lookup("Nette\Forms\Container");
 		$buttonName = $this->formatButtonName($this->control->getName());
 		$button = $form->getComponent($buttonName, false);
 		return $button !== null;
@@ -81,7 +81,7 @@ class FormControlDependencyHelper extends Object {
 	 * @return SubmitButton
 	 */
 	public function getAnyAttachedButton($need = false) {
-		$form = $this->control->lookup("Nette\Forms\FormContainer");
+		$form = $this->control->lookup("Nette\Forms\Container");
 		$buttonName = $this->formatButtonName($this->control->getName());
 		$button = $form->getComponent($buttonName, $need);
 		return $button;
@@ -152,7 +152,7 @@ class FormControlDependencyHelper extends Object {
 		// create button
 		if($this->buttonText === null)
 			throw new InvalidArgumentException("Null caption of button is crappy *** !!! (ajax not working properly)");
-		$container = $this->control->lookup("Nette\Forms\FormContainer");
+		$container = $this->control->lookup("Nette\Forms\Container");
 
 		$this->button = new SubmitButton($this->buttonText);
 		$this->button->setValidationScope(false);
