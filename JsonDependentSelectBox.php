@@ -9,6 +9,8 @@ namespace DependentSelectBox;
 
 use Nette\Application\Responses\JsonResponse;
 use Nette\Forms\Container as FormContainer;
+use Nette\Application\UI\Presenter;
+use Nette\InvalidStateException;
 
 // \Nette\Forms\FormContainer::extensionMethod("addJsonDependentSelectBox", "DependentSelectBox\JsonDependentSelectBox::formAddJsonDependentSelectBox");
 
@@ -19,7 +21,7 @@ class JsonDependentSelectBox extends DependentSelectBox
 
 	public function submitButtonHandler($button) {
 		parent::submitButtonHandler($button);
-		if ($this->getPresenter()->isAjax())
+		if ($this->lookup("\Nette\Application\UI\Presenter")->isAjax())
 			$this->addJsonResponseItem($this);
 	}
 
@@ -30,10 +32,10 @@ class JsonDependentSelectBox extends DependentSelectBox
 				$child->addJsonResponseItem($child);
 	}
 
-	public static function tryJsonResponse() {
+	public static function tryJsonResponse(Presenter $presenter) {
 		if(empty(self::$jsonResoponseItems))
 			return;
-
+		
 		$payload = array(
 			"type" => "JsonDependentSelectBoxResponse",
 			"items" => array()
@@ -45,7 +47,7 @@ class JsonDependentSelectBox extends DependentSelectBox
 			);
 		}
 		$response = new JsonResponse($payload);
-		$this->getPresenter()->sendResponse($response);
+		$presenter->sendResponse($response);
 	}
 
 
