@@ -400,10 +400,10 @@ class DependentSelectBox extends SelectBox {
 	}
 
 	public static function register($methodName = "addDependentSelectBox") {
-		if(PHP_VERSION_ID >= 50300)
-			FormContainer::extensionMethod($methodName, "DependentSelectBox\DependentSelectBox::Container_prototype_addDependentSelectBox");
-		else
+		if(NETTE_PACKAGE == 'PHP 5.2')
 			FormContainer::extensionMethod("FormContainer::$methodName", array("DependentSelectBox", "Container_prototype_addDependentSelectBox"));
+		else
+			FormContainer::extensionMethod($methodName, "DependentSelectBox\DependentSelectBox::Container_prototype_addDependentSelectBox");
 	}
 
 // </editor-fold>
