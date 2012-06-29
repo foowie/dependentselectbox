@@ -135,11 +135,13 @@ class DependentSelectBox extends SelectBox {
 	/**
 	 * Set value for "disabled" select box
 	 * @param array array($key => $value)
+	 * @return DependentSelectBox
 	 */
 	public function setDisabledValue($disabledValue = null) {
 		$this->disabledValue = $disabledValue;
 		if($this->isDependentSelectBoxDisabled())
 			$this->disableSelectBox();
+		return $this;
 	}
 
 	/**
