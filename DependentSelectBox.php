@@ -188,7 +188,12 @@ class DependentSelectBox extends SelectBox {
 		$this->refresh(false, false);
 	}
 
-
+	/**
+	 * @return SelectBox[]|DependentSelectBox[]
+	 */
+	public function getDependentParents() {
+		return $this->parents;
+	}
 
 
 // </editor-fold>
