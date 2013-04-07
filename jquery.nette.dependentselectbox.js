@@ -25,12 +25,13 @@ jQuery.extend({
 
 		initialize: function() {
 			$.dependentselectbox.hideSubmits();
-			$('.'+$.dependentselectbox.controlClass).live('change', function() {
+			var select = $('.' + $.dependentselectbox.controlClass);
+			$(document).on('change', select, function () {//
 				// Nette form validation
-				button = document.getElementById(($(this).attr('id'))+$.dependentselectbox.buttonSuffix);
+				button = document.getElementById((select.attr('id')) + $.dependentselectbox.buttonSuffix);
 				button.form["nette-submittedBy"] = button;
 				// ----
-				$('#'+($(this).attr('id'))+$.dependentselectbox.buttonSuffix).ajaxSubmit($.dependentselectbox.jsonResponse);
+				$('#' + (select.attr('id')) + $.dependentselectbox.buttonSuffix).ajaxSubmit($.dependentselectbox.jsonResponse);
 			});
 		},
 
