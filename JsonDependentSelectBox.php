@@ -12,7 +12,7 @@ use Nette\Forms\Container as FormContainer;
 use Nette\Application\UI\Presenter;
 use Nette\InvalidStateException;
 
-// \Nette\Forms\FormContainer::extensionMethod("addJsonDependentSelectBox", "DependentSelectBox\JsonDependentSelectBox::formAddJsonDependentSelectBox");
+// \Nette\Forms\Container::extensionMethod("addJsonDependentSelectBox", "DependentSelectBox\JsonDependentSelectBox::formAddJsonDependentSelectBox");
 
 class JsonDependentSelectBox extends DependentSelectBox
 {
