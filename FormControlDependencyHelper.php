@@ -55,7 +55,7 @@ class FormControlDependencyHelper extends Object {
 		$this->control = $control;
 		$this->controlClass = $controlClass;
 		$this->buttonPosition = self::$defaultButtonPosition;
-		if($this->control->lookup($this->getContainerClass(), false) === null)
+		if($this->control->lookup('Nette\Forms\Container', false) === null)
 			throw new InvalidArgumentException("Components should be assigned to FormContainer !");
 	}
 
@@ -68,7 +68,7 @@ class FormControlDependencyHelper extends Object {
 	 * @return boolean
 	 */
 	public function isAnyButtonAttached() {
-		$form = $this->control->lookup($this->getContainerClass());
+		$form = $this->control->lookup('Nette\Forms\Container');
 		$buttonName = $this->formatButtonName($this->control->getName());
 		$button = $form->getComponent($buttonName, false);
 		return $button !== null;
@@ -80,7 +80,7 @@ class FormControlDependencyHelper extends Object {
 	 * @return SubmitButton
 	 */
 	public function getAnyAttachedButton($need = false) {
-		$form = $this->control->lookup($this->getContainerClass());
+		$form = $this->control->lookup('Nette\Forms\Container');
 		$buttonName = $this->formatButtonName($this->control->getName());
 		$button = $form->getComponent($buttonName, $need);
 		return $button;
@@ -151,7 +151,7 @@ class FormControlDependencyHelper extends Object {
 		// create button
 		if($this->buttonText === null)
 			throw new InvalidArgumentException("Null caption of button is crappy *** !!! (ajax not working properly)");
-		$container = $this->control->lookup($this->getContainerClass());
+		$container = $this->control->lookup('Nette\Forms\Container');
 
 		$this->button = new SubmitButton($this->buttonText);
 		$this->button->setValidationScope(false);
@@ -209,9 +209,6 @@ class FormControlDependencyHelper extends Object {
 		return $componentName.self::$buttonSuffix;
 	}
 
-	public function getContainerClass() {
-		return NETTE_PACKAGE == "PHP 5.2" ? "FormContainer" : "Nette\Forms\Container";
-	}
 // </editor-fold>
 
 }

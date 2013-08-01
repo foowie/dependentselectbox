@@ -13,7 +13,6 @@ use LogicException;
 use Nette\NotSupportedException;
 use Nette\Forms\Container as FormContainer;
 
-// \Nette\Forms\FormContainer::extensionMethod("addDependentSelectBox", "DependentSelectBox\DependentSelectBox::formAddDependentSelectBox");
 
 class DependentSelectBox extends SelectBox {
 
@@ -269,8 +268,7 @@ class DependentSelectBox extends SelectBox {
 						throw new InvalidArgumentException("When using 'autoSelectRootFirstItem = true', parent must be instance of SelectBox !");
 					$items = $parent->getItems();
 					if(!empty($items)) {
-						if($parent->areKeysUsed())
-							$items = array_keys($items);
+						$items = array_keys($items);
 						$parent->setValue(reset($items));
 					}
 				}
@@ -394,23 +392,12 @@ class DependentSelectBox extends SelectBox {
 		$this->setValue($key, false);
 	}
 
-
-	/**
-	 * @deprecated Alias for Container_prototype_addDependentSelectBox
-	 */
-	public static function formAddDependentSelectBox($_this, $name, $label, $parents, $dataCallback) {
-		return self::Container_prototype_addDependentSelectBox($_this, $name, $label, $parents, $dataCallback);
-	}
-
 	public static function Container_prototype_addDependentSelectBox(FormContainer $obj, $name, $label, $parents, $dataCallback) {
 		return $obj[$name] = new DependentSelectBox($label, $parents, $dataCallback);
 	}
 
 	public static function register($methodName = "addDependentSelectBox") {
-		if(NETTE_PACKAGE == 'PHP 5.2')
-			FormContainer::extensionMethod("FormContainer::$methodName", array("DependentSelectBox", "Container_prototype_addDependentSelectBox"));
-		else
-			FormContainer::extensionMethod($methodName, "DependentSelectBox\DependentSelectBox::Container_prototype_addDependentSelectBox");
+		FormContainer::extensionMethod($methodName, "DependentSelectBox\DependentSelectBox::Container_prototype_addDependentSelectBox");
 	}
 
 // </editor-fold>
