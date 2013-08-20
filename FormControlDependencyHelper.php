@@ -27,7 +27,7 @@ class FormControlDependencyHelper extends Object {
 	/** Put button after given control */
 	const POSITION_AFTER_CONTROL = 3;
 
-	/** @var string Suffix for button name and html class */
+	/** @var string Suffix for button name, html id and html class */
 	public static $buttonSuffix = "_submit";
 	/** @var POSITION_UNDEFINED|POSITION_DEFAULT|POSITION_BEFORE_CONTROL|POSITION_AFTER_CONTROL Default position for buttons  */
 	public static $defaultButtonPosition = self::POSITION_AFTER_CONTROL;
@@ -156,6 +156,8 @@ class FormControlDependencyHelper extends Object {
 		$this->button = new SubmitButton($this->buttonText);
 		$this->button->setValidationScope(false);
 		$this->button->getControlPrototype()->class($this->controlClass.self::$buttonSuffix);
+		$this->button->setHtmlId($this->control->getHtmlId().self::$buttonSuffix);
+
 
 		$buttonName = $this->formatButtonName($this->control->getName());
 		switch($this->buttonPosition) {
