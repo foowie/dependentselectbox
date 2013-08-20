@@ -93,9 +93,7 @@ class FormControlDependencyHelper extends Object {
 	 */
 	public function addOnChangeCallback($callback) {
 		$this->createButton();
-		if(!is_callable($callback))
-			throw new InvalidArgumentException("Not callable !");
-		$this->button->onClick[] = $callback;
+		$this->button->onClick[] = new \Nette\Callback($callback);
 	}
 
 

@@ -60,9 +60,7 @@ class DependentSelectBox extends SelectBox {
 	 */
 	public function __construct($label, $parents, $dataCallback) {
 		parent::__construct($label, null, null);
-		if(!(is_callable($dataCallback)))
-			throw new InvalidArgumentException("Given callback is not callable !");
-		$this->dataCallback = $dataCallback;
+		$this->dataCallback = new \Nette\Callback($dataCallback);
 		if(!is_array($parents))
 			$parents = ($parents === null) ? array() : array($parents);
 		$this->parents = $parents;
@@ -174,11 +172,9 @@ class DependentSelectBox extends SelectBox {
 	 * @return DependentSelectBox  provides a fluent interface
 	 */
 	public function addOnSubmitCallback($callback, $parameter = null, $_ = null) {
-		if(!is_callable($callback))
-			throw new InvalidArgumentException("Given callback is not callable !");
 		$params = func_get_args();
 		unset($params[0]);
-		$this->onSubmit[] = array($callback, $params);
+		$this->onSubmit[] = array(new \Nette\Callback($callback), $params);
 		return $this;
 	}
 
@@ -206,8 +202,10 @@ class DependentSelectBox extends SelectBox {
 	public function submitButtonHandler($button) {
 		$form = $button->getForm();
 
-		foreach($this->onSubmit as $onSubmitItem)
-			call_user_func_array($onSubmitItem[0], $onSubmitItem[1]);
+		foreach($this->onSubmit as $onSubmitItem) {
+			list($callback, $params) = $onSubmitItem;
+			$callback->invokeArgs($params);
+		}
 
 		if($this->hasAnyParentEmptyValue())
 			return;
@@ -307,7 +305,7 @@ class DependentSelectBox extends SelectBox {
 	 * @param Form $form Form with values
 	 */
 	protected function setItemsFromCallback($form) {
-		$data = call_user_func($this->dataCallback, $form, $this);
+		$data = $this->dataCallback->invoke($form, $this);
 		if(!is_array($data))
 			throw new InvalidArgumentException("Data must be array !");
 		$this->setItems($data);
