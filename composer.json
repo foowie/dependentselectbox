@@ -1,0 +1,21 @@
+{
+	"name": "Foowie/DependentSelectBox",
+	"type": "library",
+	"description": "Selectbox whose options are depended on another selectbox. Library for Nette Framework",
+	"keywords": ["nette", "selectbox"],
+	"homepage": "http://addons.nette.org/cs/dependentselectbox",
+	"license": ["BSD-3-Clause", "MIT"],
+	"authors": [
+	{
+		"name": "Daniel Robenek"
+	}
+	],
+	"require": {
+		"nette/nette": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"DependentSelectBox": "src/"
+		}
+	}
+}
