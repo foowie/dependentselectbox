@@ -1,5 +1,5 @@
 {
-	"name": "Foowie/DependentSelectBox",
+	"name": "foowie/dependentselectbox",
 	"type": "library",
 	"description": "Selectbox whose options are depended on another selectbox. Library for Nette Framework",
 	"keywords": ["nette", "selectbox"],
