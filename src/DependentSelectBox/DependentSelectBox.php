@@ -342,7 +342,7 @@ class DependentSelectBox extends SelectBox {
 		$this->isDisabled = true;
 		if($this->getControlPrototype()->class == null)
 			$this->getControlPrototype()->class = "";
-		$this->getControlPrototype()->class(self::$disabledHtmlClass);
+		$this->getControlPrototype()->addClass(self::$disabledHtmlClass);
 		if($this->disabledValue === null) {
 			$this->setValue(null, false);
 			$this->setItems(array());
